@@ -1,0 +1,32 @@
+<%= form_for @category do |f| %>
+
+<% if @category.errors.any? %>
+<h3>These errors prohibited the form from being saved:</h3>
+<% @category.errors.full_messages.each do |msg| %>
+<ul>
+<%= msg %>
+</ul>
+<% end %>
+
+<% end %>
+<label for="category_name"> Category: </label><br/>
+<%= f.text_field :name %><br/>
+<span id="nameError"></span><br/>
+<%= f.submit %>
+<%end%>
+
+<script>
+	var nameHandle = document.getElementById('category_name');
+	var nameErrorHandle = document.getElementById('nameError');
+	var nameFormat = /^[a-zA-Z ]*$/;
+	
+	nameHandle.addEventListener('blur', function(){
+		if(nameHandle.value === ""){
+			nameErrorHandle.innerHTML = "can't be blank";
+		}else if(!nameFormat.test(nameHandle.value)){
+      		nameErrorHandle.innerHTML = "should only be alphabets";
+      	}else{
+      		nameErrorHandle.innerHTML = "";
+      	}
+	}, false);
+</script>
