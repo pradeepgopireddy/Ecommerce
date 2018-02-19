@@ -1,0 +1,6 @@
+<h3>My Reviews</h3>
+<ol>
+<% @reviews.each do |review| %>
+	<li><%= review.product.name %> - <%= review.body %> - <%= review.rating %> - <%= review.created_at %></li>
+<% end %>
+</ol>

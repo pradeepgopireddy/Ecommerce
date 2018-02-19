@@ -1,0 +1,16 @@
+<h2>Add Category</h2>
+<%= form_for @category do |f| %>
+
+<% if @category.errors.any? %>
+<h3>These errors prohibited the form from being saved:</h3>
+<% @category.errors.full_messages.each do |msg| %>
+<ul>
+<%= msg %>
+</ul>
+<% end %>
+
+<% end %>
+<label for="category_name"> Category: </label><br/>
+<%= f.text_field :name %><br/>
+<%= f.submit %>
+<%end%>

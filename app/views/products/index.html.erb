@@ -1,0 +1,18 @@
+<h2>Listing Products(<%=@products.length%>)</h2>
+<ul>
+<%@products.each do |product|%>
+	<li><%= link_to product.name, product_path(product.id) %> -INR <%=product.price%> - <%=product.description%> -<%= product.category.name %>
+	<%#=Category.find(product.category_id).name%> 
+	<% if user_signed_in? %>
+		<%= form_for CartLineItem.new do |f| %>
+			<%= f.hidden_field :quantity, value: 1 %>
+			<%= f.hidden_field :product_id, value: product.id %>
+			<%= f.submit "ADD" %>
+		<% end %>
+	<% end %>
+	</li> 
+<%end%>
+</ul>
+<% if (user_signed_in?) && (can? :create, Product.new) %>
+<%= link_to "Add Product", new_product_path %>
+<% end %>

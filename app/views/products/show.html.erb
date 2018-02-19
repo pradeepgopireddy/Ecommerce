@@ -1,0 +1,63 @@
+<h2><%= @product.name %></h2>
+<% if (user_signed_in?) && (can? :update, @product) %>
+<p>
+	<%= link_to "edit", edit_product_path(@product.id) %> |
+	<%= link_to "delete", product_path(@product.id), method: :delete, data: {confirm: "Are you sure?"} %>
+	</p>
+	<% end %>
+<p><%= @product.description %></p>
+<p> INR - <%= @product.price %></p>
+<%= @product.cod_eligible ? "cod eligible" : "cod not eligible" %>
+<%= image_tag(@product.image_url, size: "250x250") %><br/>
+<% if !@product.category.nil? %>
+	<%= link_to @product.category.name, category_path(@product.category_id) %>
+<% end %>
+<%= link_to "List products", products_path %><br/>
+
+
+<h3>Add to Cart</h3>
+<% if user_signed_in? %>
+	<%= form_for CartLineItem.new do |f| %>
+		<label>Quantity:</label>
+		<%= f.select :quantity, (1..5).to_a %><br/>
+		<%= f.hidden_field :product_id, value: @product.id %>
+		<%= f.submit "Add To Cart" %>
+	<% end %>
+<% else %>
+<p>You need to signin before adding products to your cart</p>
+<% end %>
+
+<% if @product.reviews.empty? %>
+	<p>No reviews found. Be the first one to review.</p>
+<%else %>
+	<h3>Listing Reviews</h3>
+	<ol>
+		<% @product.reviews.each do |review| %>
+			<li><%= review.body %> <%= review.rating %>
+			<% if (user_signed_in?) && (can? :update, review) %>
+		 		<%= link_to "destroy", review_path(review.id), method: :delete, data: {confirm: "Are you sure want to delete review"} %> |<%= link_to "edit", edit_review_path(review.id)%></li>
+		 		<% end %>
+		<% end %>
+	</ol>
+<% end %>
+<h3>Add your review</h3>
+<%= form_for @review do |f| %>
+	<label for="review_body">Body</label><br/>
+	<%= f.text_area :body %><br/>
+	<%= f.hidden_field :product_id, value: @product.id %><br/>
+	<label>Rating</label><br/>
+	<%= f.radio_button :rating, 1 %> 1
+	<%= f.radio_button :rating, 2 %> 2
+	<%= f.radio_button :rating, 3 %> 3
+	<%= f.radio_button :rating, 4 %> 4
+	<%= f.radio_button :rating, 5 %> 5 <br/>
+	<%= f.submit "Add Review" %>
+<% end %>
+<% if user_signed_in? %>
+	<%= form_for Wishlist.new do |f| %>
+		<%= f.hidden_field :product_id, value: @product.id %>
+		<%= f.submit "Move To Wishlist" %>
+	<% end %>
+<% else %>
+	<p>You need to signin before adding products to wishlist</p>
+<% end %>

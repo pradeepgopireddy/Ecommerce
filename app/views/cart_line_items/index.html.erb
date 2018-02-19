@@ -1,0 +1,53 @@
+<h2>Your Cart</h2>
+<% if @cart_line_items.empty? %>
+	<p>Your cart is empty. Shop <%= link_to "here", products_path %></p>
+<% else %>
+	<table border = "1">
+			<thead>
+				<tr>
+					<th> # </th>
+					<th>   </th>
+					<th> Name </th>
+					<th> Price </th>
+					<th> Quantity </th>
+					<th> Total </th>
+					<th>   </th>
+					<th>   </th>
+				</tr>
+			</thead>
+			<% total = 0 %>
+			<tbody>
+				<% @cart_line_items.each_with_index do |cart_line_item, index| %>
+				<tr>
+					<td><%= index + 1 %></td>
+					<td><%= image_tag(cart_line_item.product.image_url, size: "150x125") %></td>
+					<td><%= link_to cart_line_item.product.name, cart_line_item.product %></td>
+					<td><%= cart_line_item.product.price %></td>
+					<td><%= cart_line_item.quantity %></td>
+					<td><%= cart_line_item.product.price * cart_line_item.quantity %></td>
+					<% total += cart_line_item.product.price * cart_line_item.quantity %>
+					<td><%= link_to "remove", cart_line_item_path(cart_line_item.id), method: :delete, data: {confirm: "Are you sure want to remove"} %></td>
+					<td><%= form_for Wishlist.new do |f| %>
+					<%= f.hidden_field :product_id, value: cart_line_item.product_id %>
+					<%= f.submit "Add to Wishlist" %>
+					<% end %>	
+					</td>
+				</tr>
+				<% end %>
+			</tbody>
+	</table>
+	<h3>Total Cart = <%= total %></h3>
+	<h3>Checkout</h3>
+	<%= form_for Order.new do |f| %>
+	<h5> Select Address</h5>
+		<ol>
+			<% current_user.addresses.each do |address| %>
+			<li><label for = "address_id"><%= address.name %></label>
+			<%= f.radio_button :address_id, address.id %><%= address.details %> <%= address.street %><%= address.landmark %> <%= address.city %></li>
+			<% end %>
+		</ol>
+		<%= f.submit "Checkout" %>
+	<% end %>
+<% end %>
+
+

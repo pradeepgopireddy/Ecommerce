@@ -1,0 +1,10 @@
+<h3>Your Orders</h3>
+<% current_user.orders.each do |order| %>
+	<h3><%= order.order_number %></h3>
+	<p><%= order.order_date %>- INR <%= order.total %></p>
+	<ol>
+		<% order.order_line_items.each do |line_item| %>
+		<li><%= line_item.product.name %> INR - <%= line_item.price %> quantity: <%= line_item.quantity %></li>
+		<% end %>
+	</ol>
+<% end %>

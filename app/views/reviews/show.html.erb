@@ -1,0 +1,13 @@
+<h3><%= @review.product.name%></h3><br/>
+<p>Body:<%= @review.body %></p><br/>
+<p>Rating:<%= @review.rating %></p><br/>
+<h3>Listing Other Reviews for this product</h3>
+<ol>
+<% @review.product.reviews.each do |review| %>
+<% if review.id == @review.id %>
+<% next %>
+<% else %>
+<li><%= review.body %>-<%=review.rating %></li><br/>
+<% end %>
+<% end %>
+</ol>
