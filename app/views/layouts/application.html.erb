@@ -23,7 +23,7 @@
     <%= yield %>
     <% if user_signed_in? %>
         <p>Your current IP (<%= current_user.current_sign_in_ip %>)</p>
-        <%= current_user.inspect %>
+        <%#= current_user.inspect %>
         <% end %>
   </body>
 </html>
