@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
+	get 'categories/check_name_present'
 	resources :orders
-  resources :brands
-  resources :addresses
+  	resources :brands
+  	resources :addresses
   devise_for :users
 	resources :categories
 	resources :products

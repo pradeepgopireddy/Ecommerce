@@ -26,7 +26,19 @@
 		}else if(!nameFormat.test(nameHandle.value)){
       		nameErrorHandle.innerHTML = "should only be alphabets";
       	}else{
-      		nameErrorHandle.innerHTML = "";
+      		xhr = new XMLHttpRequest();
+      		xhr.open('GET', `/categories/check_name_present?name=${nameHandle.value}`, true);
+      		xhr.onreadystatechange = function(){
+      			if(xhr.readyState === 4 && xhr.status === 200){
+      				var response = JSON.parse(xhr.responseText);
+      				if(response.msg){
+      					nameErrorHandle.innerHTML = 'can be used';
+      				}else{
+      					nameErrorHandle.innerHTML = 'already taken';
+      				}
+      			}
+      		}
+      		xhr.send();
       	}
 	}, false);
 </script>

@@ -42,16 +42,18 @@
 <% end %>
 <h3>Add your review</h3>
 <%= form_for @review do |f| %>
-	<label for="review_body">Body</label><br/>
+	<label for="review_body">Body</label>
 	<%= f.text_area :body %><br/>
+	<span id="bodyError"></span>
 	<%= f.hidden_field :product_id, value: @product.id %><br/>
-	<label>Rating</label><br/>
+	<label for="review_rating">Rating</label>
 	<%= f.radio_button :rating, 1 %> 1
 	<%= f.radio_button :rating, 2 %> 2
 	<%= f.radio_button :rating, 3 %> 3
 	<%= f.radio_button :rating, 4 %> 4
 	<%= f.radio_button :rating, 5 %> 5 <br/>
-	<%= f.submit "Add Review" %>
+	<span id="ratingError"></span><br/>
+	<%= f.submit "Add Review", id: 'submit' %>
 <% end %>
 <% if user_signed_in? %>
 	<%= form_for Wishlist.new do |f| %>
@@ -61,3 +63,65 @@
 <% else %>
 	<p>You need to signin before adding products to wishlist</p>
 <% end %>
+<script>
+	var bodyFormat = /^[a-zA-Z ]*$/;
+
+	var bodyHandle = document.getElementById('review_body');
+	var ratingHandle = document.getElementById('review_rating');
+	var formHandle = document.getElementById('new_review');
+	var submitHandle = document.getElementById('submit');
+
+	var bodyErrorHandle = document.getElementById('bodyError');
+	var ratingErrorHandle = document.getElementById('ratingError');
+	var validator = {
+		bodyValid: false,
+		ratingValid: false
+	};
+
+	function bodyValidation(){
+		if(bodyHandle.value === ""){
+			validator.bodyValid = false;
+			bodyErrorHandle.innerHTML = "can't be blank";
+		}else if(!bodyFormat.test(bodyHandle.value)){
+			validator.bodyValid = false;
+			bodyErrorHandle.innerHTML = "should be alphabets";
+		}else if(bodyHandle.value.length < 10 ){
+			validator.bodyValid = false;
+			bodyErrorHandle.innerHTML = "review is too short";
+		}else{
+			validator.bodyValid = true;
+			bodyErrorHandle.innerHTML = "";
+		}
+	}
+
+	function ratingValidation(){
+		document.getElementsByName('review[rating]').forEach(function(rating){
+			if(rating.checked){
+				validator.ratingValid = true;
+				return ratingErrorHandle.innerHTML = "";
+			}
+		})
+		if(!validator.ratingValid){
+			ratingErrorHandle.innerHTML = "can't be blank";
+		}
+		// if(ratingHandle.value === ""){
+		// 	validator.ratingValid = false;
+		// 	ratingErrorHandle.innerHTML = "can't be blank";
+		// }else if(ratingHandle.value.checked){
+		// 	validator.ratingValid = true;
+		// 	ratingErrorHandle.innerHTML = "";
+		// }
+	}
+	formHandle.addEventListener('submit', function(e){
+		bodyValidation();
+		ratingValidation();
+		if(Object.values(validator).includes(false)){
+			e.preventDefault();
+			setTimeout(function(){
+				submitHandle.disabled = false;
+			}, 100);
+		}else{
+
+		}
+	}, false)
+</script>

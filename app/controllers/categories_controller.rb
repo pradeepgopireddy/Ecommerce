@@ -45,4 +45,10 @@ class CategoriesController < ApplicationController
 		@category.destroy
 		redirect_to categories_path
 	end
+
+	def check_name_present
+    @category = Category.find_by(name: params[:name])
+    render json: @category.nil? ? {'msg': true} : {'msg': false}
+  end
+
 end

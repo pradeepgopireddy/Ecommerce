@@ -39,7 +39,7 @@
 <script>
 	var nameFormat = /^[a-zA-Z ]*$/;
 	var numberFormat = /^\d+$/; ///^[0-9]*\d$/;
-	var desFormat = /^[ A-Za-z0-9_@./#&+-]*$/;
+	var desFormat = /^[a-zA-Z ]*$/;///^[ A-Za-z0-9_@./#&+-]*$/;
 
 	var categoryHandle = document.getElementById('product_category_id');
 	var nameHandle = document.getElementById('product_name');
@@ -49,6 +49,7 @@
 	var stockHandle = document.getElementById('product_stock');
 	var formHandle = document.getElementById('new_product');
 	var submitHandle = document.getElementById('submit');
+	var codHandle = document.getElementById('product_cod_eligible');
 
 	var categoryErrorHandle = document.getElementById('categoryError');
 	var nameErrorHandle = document.getElementById('nameError');
@@ -56,13 +57,25 @@
 	var imageErrorHandle = document.getElementById('imageError');
 	var priceErrorHandle = document.getElementById('priceError');
 	var stockErrorHandle = document.getElementById('stockError');
+
+	priceHandle.addEventListener('blur', function(){
+		if(parseInt(priceHandle.value) < 10000){
+			codHandle.checked = true;
+		}else{
+			codHandle.checked = false;
+		}
+	}, false)
+	priceHandle.addEventListener('focus', function(){
+		priceHandle.innerHTML = "";
+		codHandle.checked = false;
+	}, false)
 	var validator = {
 		categoryValid: false,
 		nameValid: false,
 		descriptionValid: false,
 		imageValid: false,
 		priceValid: false,
-		stockValid: false
+		stockValid: false,
 	};
 
 	function categoryValidation(){
