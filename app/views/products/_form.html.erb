@@ -30,7 +30,7 @@
 <%= f.check_box :cod_eligible %> <label for="product_cod_eligible">COD Eligible</label>
 
 <label for="product_stock"> Stock: </label>
-<%= f.text_field :stock, min: 0 %><br/>
+<%= f.number_field :stock, min: 0 %><br/>
 <span id="stockError"></span><br/>
 
 <%= f.submit "Submit", id: 'submit' %>
@@ -39,6 +39,7 @@
 <script>
 	var nameFormat = /^[a-zA-Z ]*$/;
 	var numberFormat = /^\d+$/; ///^[0-9]*\d$/;
+	var desFormat = /^[ A-Za-z0-9_@./#&+-]*$/;
 
 	var categoryHandle = document.getElementById('product_category_id');
 	var nameHandle = document.getElementById('product_name');
@@ -91,7 +92,7 @@
 		if(descriptionHandle.value === ""){
 			validator.descriptionValid = false;
 			descriptionErrorHandle.innerHTML = "can't be blank";
-		}else if(!nameFormat.test(descriptionHandle.value)){
+		}else if(!desFormat.test(descriptionHandle.value)){
 			validator.descriptionValid = false;
 			descriptionErrorHandle.innerHTML = "should only be alphabets";
 		}else if(descriptionHandle.value.length < 5){
