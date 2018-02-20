@@ -8,40 +8,156 @@
 <% end %>
 </ul>
 
-<label for="product_categoty_id"> Category: </label><br/>
+<label for="product_category_id"> Category: </label>
 <%= f.collection_select :category_id, Category.all, :id, :name, prompt: "-->Selcet Category<--" %><br/>
+<span id="categoryError"></span><br/>
 
-<label for="product_name"> Name: </label><br/>
-<%= f.text_field :name, placeholder: "Enter name" %> <span id="nameMsg"> </span> <br/>
+<label for="product_name"> Name: </label>
+<%= f.text_field :name, placeholder: "Enter name" %><br/>
+<span id="nameError"></span><br/>
 
-<label for="product_description"> Description: </label><br/>
+<label for="product_description"> Description: </label>
 <%= f.text_area :description %><br/>
+<span id="descriptionError"></span><br/>
 
-<label for="product_image_url">Image URL</label><br/>
+<label for="product_image_url">Image URL</label>
 <%= f.text_field :image_url %><br/>
+<span id="imageError"></span><br/>
 
-<label for="product_price"> Price: </label><br/>
+<label for="product_price"> Price: </label>
 <%= f.number_field :price, min: 1 %><br/>
-<%= f.check_box :cod_eligible %> <label for="product_cod_eligible">COD Eligible</label><br/>
+<span id="priceError"></span><br/>
+<%= f.check_box :cod_eligible %> <label for="product_cod_eligible">COD Eligible</label>
 
-<label for="product_stock"> Stock: </label><br/>
+<label for="product_stock"> Stock: </label>
 <%= f.text_field :stock, min: 0 %><br/>
+<span id="stockError"></span><br/>
 
-<%= f.submit %>
+<%= f.submit "Submit", id: 'submit' %>
 <% end %>
 
 <script>
-	var nameHandle = document.getElementById('product_name');
-	var nameMsgHandle = document.getElementById('nameMsg');
+	var nameFormat = /^[a-zA-Z ]*$/;
+	var numberFormat = /^\d+$/; ///^[0-9]*\d$/;
 
-	nameHandle.addEventListener('focus', function(){
-		nameMsgHandle.innerHTML = "Enter the product name";
-	}, false)
-	nameHandle.addEventListener('blur', function(){
-		if (nameHandle.value == ""){
-			nameMsgHandle.innerHTML = "can't be blank";
-		}else {
-			nameMsgHandle.innerHTML = "";
+	var categoryHandle = document.getElementById('product_category_id');
+	var nameHandle = document.getElementById('product_name');
+	var descriptionHandle = document.getElementById('product_description');
+	var imageHandle = document.getElementById('product_image_url');
+	var priceHandle = document.getElementById('product_price');
+	var stockHandle = document.getElementById('product_stock');
+	var formHandle = document.getElementById('new_product');
+	var submitHandle = document.getElementById('submit');
+
+	var categoryErrorHandle = document.getElementById('categoryError');
+	var nameErrorHandle = document.getElementById('nameError');
+	var descriptionErrorHandle = document.getElementById('descriptionError');
+	var imageErrorHandle = document.getElementById('imageError');
+	var priceErrorHandle = document.getElementById('priceError');
+	var stockErrorHandle = document.getElementById('stockError');
+	var validator = {
+		categoryValid: false,
+		nameValid: false,
+		descriptionValid: false,
+		imageValid: false,
+		priceValid: false,
+		stockValid: false
+	};
+
+	function categoryValidation(){
+		if(categoryHandle.value === ""){
+			validator.categoryValid = false;
+			categoryErrorHandle.innerHTML = "can't be blank";
+		}else{
+			validator.categoryValid = true;
+			categoryErrorHandle.innerHTML = "";
+		}
+	}
+
+	function nameValidation(){
+	    if(nameHandle.value === ""){
+	      validator.nameValid = false;
+	      nameErrorHandle.innerHTML = "can't be blank";
+	    }else if(!nameFormat.test(nameHandle.value)){
+	      validator.nameValid = false;
+	      nameErrorHandle.innerHTML = "should only be alphabets"
+	    }else{
+	      validator.nameValid = true;
+	      nameErrorHandle.innerHTML = "";
+	    }
+	}
+
+	function descriptionValidation(){
+		if(descriptionHandle.value === ""){
+			validator.descriptionValid = false;
+			descriptionErrorHandle.innerHTML = "can't be blank";
+		}else if(!nameFormat.test(descriptionHandle.value)){
+			validator.descriptionValid = false;
+			descriptionErrorHandle.innerHTML = "should only be alphabets";
+		}else if(descriptionHandle.value.length < 5){
+			validator.descriptionValid = false;
+			descriptionErrorHandle.innerHTML = "your description is too small";
+		}else{
+			validator.descriptionValid = false;
+			descriptionErrorHandle.innerHTML = "";
+		}
+	}
+
+	function imageValidation(){
+		if(imageHandle.value === ""){
+			validator.imageValid = false;
+			imageErrorHandle.innerHTML = "can't be blank";
+		}else{
+			validator.imageValid = true;
+			imageErrorHandle.innerHTML = "";
+		}
+	}
+
+	function priceValidation(){
+		if(priceHandle.value === ""){
+			validator.priceValid = false;
+			priceErrorHandle.innerHTML = "can't be blank";
+		}else if(parseInt(priceHandle.value) === NaN){
+			validator.priceValid = false;
+			priceErrorHandle.innerHTML = "should be number";
+		}else if(parseInt(priceHandle.value) < 1){
+			validator.priceValid = false;
+			priceErrorHandle.innerHTML = "should be greater than zero";
+		}else{
+			validator.priceValid = true;
+			priceErrorHandle.innerHTML = "";
+		}
+	}
+
+	function stockValidation(){
+		if(stockHandle.value === ""){
+			validator.stockValid = false;
+			stockErrorHandle.innerHTML = "can't be blank";
+		}else if(parseInt(stockHandle.value) === NaN){
+			validator.stockValid = false;
+			stockErrorHandle.innerHTML = "should be number";
+		}else if(parseInt(stockHandle.value) < 0){
+			validator.stockValid = false;
+			stockErrorHandle.innerHTML = "should be greater than or equals to zero";
+		}else{
+			validator.stockValid = true;
+			stockErrorHandle.innerHTML = "";
+		}
+	}
+	formHandle.addEventListener('submit', function(e){
+		categoryValidation();
+		nameValidation();
+		descriptionValidation();
+		imageValidation();
+		priceValidation();
+		stockValidation();
+		if(Object.values(validator).includes(false)){
+			e.preventDefault();
+			setTimeout(function(){
+				submitHandle.disabled = false;
+			}, 100);
+		}else{
+
 		}
 	}, false);
 </script>
