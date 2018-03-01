@@ -31,29 +31,35 @@
 	<p>No reviews found. Be the first one to review.</p>
 <%else %>
 	<h3>Listing Reviews</h3>
-	<ol>
+	<ol id="reviewList">
 		<% @product.reviews.each do |review| %>
-			<li><%= review.body %> <%= review.rating %>
+			<li id="review_<%= review.id %>"><%= review.body %> <%= review.rating %>
 			<% if (user_signed_in?) && (can? :update, review) %>
-		 		<%= link_to "destroy", review_path(review.id), method: :delete, data: {confirm: "Are you sure want to delete review"} %> |<%= link_to "edit", edit_review_path(review.id)%></li>
+		 		<%= link_to "destroy", review_path(review.id), method: :delete, data: {confirm: "Are you sure want to delete review"}, remote: true %> |<%= link_to "edit", edit_review_path(review.id)%></li>
 		 		<% end %>
 		<% end %>
 	</ol>
 <% end %>
-<h3>Add your review</h3>
-<%= form_for @review do |f| %>
-	<label for="review_body">Body</label>
-	<%= f.text_area :body %><br/>
-	<span id="bodyError"></span>
-	<%= f.hidden_field :product_id, value: @product.id %><br/>
-	<label for="review_rating">Rating</label>
-	<%= f.radio_button :rating, 1 %> 1
-	<%= f.radio_button :rating, 2 %> 2
-	<%= f.radio_button :rating, 3 %> 3
-	<%= f.radio_button :rating, 4 %> 4
-	<%= f.radio_button :rating, 5 %> 5 <br/>
-	<span id="ratingError"></span><br/>
-	<%= f.submit "Add Review", id: 'submit' %>
+<% if !user_signed_in? %>
+	<p>Login to add review</p>
+<% else %>
+	<p id="reviewNotice"></p>
+	<div id="reviewError"></div>
+	<h3>Add your review</h3>
+	<%= form_for(@review, remote: true) do |f| %>
+		<label for="review_body">Body</label>
+		<%= f.text_area :body %><br/>
+		<span id="bodyError"></span>
+		<%= f.hidden_field :product_id, value: @product.id %><br/>
+		<label for="review_rating">Rating</label>
+		<%= f.radio_button :rating, 1 %> 1
+		<%= f.radio_button :rating, 2 %> 2
+		<%= f.radio_button :rating, 3 %> 3
+		<%= f.radio_button :rating, 4 %> 4
+		<%= f.radio_button :rating, 5 %> 5 <br/>
+		<span id="ratingError"></span><br/>
+		<%= f.submit "Add Review", id: 'submit' %>
+	<% end %>
 <% end %>
 <% if user_signed_in? %>
 	<%= form_for Wishlist.new do |f| %>
@@ -112,16 +118,16 @@
 		// 	ratingErrorHandle.innerHTML = "";
 		// }
 	}
-	formHandle.addEventListener('submit', function(e){
-		bodyValidation();
-		ratingValidation();
-		if(Object.values(validator).includes(false)){
-			e.preventDefault();
-			setTimeout(function(){
-				submitHandle.disabled = false;
-			}, 100);
-		}else{
+	// formHandle.addEventListener('submit', function(e){
+	// 	bodyValidation();
+	// 	ratingValidation();
+	// 	if(Object.values(validator).includes(false)){
+	// 		e.preventDefault();
+	// 		setTimeout(function(){
+	// 			submitHandle.disabled = false;
+	// 		}, 100);
+	// 	}else{
 
-		}
-	}, false)
+	// 	}
+	// }, false)
 </script>

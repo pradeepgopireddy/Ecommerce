@@ -1,0 +1,45 @@
+<%= form_with(model: coupan, local: true) do |form| %>
+  <% if coupan.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(coupan.errors.count, "error") %> prohibited this coupan from being saved:</h2>
+
+      <ul>
+      <% coupan.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :code %>
+    <%= form.text_field :code, id: :coupan_code %>
+  </div>
+
+  <div class="field">
+    <%= form.label :discount %>
+    <%= form.number_field :discount, id: :coupan_discount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :expriry_date %>
+    <%= form.text_field :expriry_date, id: :coupan_expriry_date %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+<script>
+  //window.onload = function(){};
+  //window.addEventListener('load', function(){}, false);
+  $(document).ready(function(){
+    $('#coupan_expriry_date').datepicker({
+      dateFormat: "yy-mm-dd",
+      changeMonth: true,
+      minDate: 0,
+      maxDate: 30,
+      numberOfMonths: 2
+    });
+  });
+</script>

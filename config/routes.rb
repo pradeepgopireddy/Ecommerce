@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resources :coupans
+	# get '/stylesheets/jquery.growl.css'
+	# get '/javascript/jquery.growl.js'
 	get 'categories/check_name_present'
 	resources :orders
   	resources :brands

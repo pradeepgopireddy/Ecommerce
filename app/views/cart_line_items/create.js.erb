@@ -1,0 +1,2 @@
+$('#cartCount').html("Your Cart(<%=current_user.cart_line_items.pluck(:quantity).inject(:+)%>)");
+$.growl.notice({ message: "Product added to cart sucessfully!" });

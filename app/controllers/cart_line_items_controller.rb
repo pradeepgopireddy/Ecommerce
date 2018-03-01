@@ -8,7 +8,7 @@ class CartLineItemsController < ApplicationController
 		@cart_line_item.user_id = current_user.id
 		@cart_line_item.save_or_update
 		#@cart_line_item.remove_from_wishlist
-		redirect_to cart_line_items_path, notice: "Successfully added to the cart"
+		#redirect_to cart_line_items_path, notice: "Successfully added to the cart"
 		# check  = current_user.cart_line_items.where('product_id = ?', @cart_line_item.product_id)
 		# if check.empty?
 		#  @cart_line_item.save

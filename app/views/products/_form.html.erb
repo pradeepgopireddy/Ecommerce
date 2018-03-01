@@ -37,6 +37,10 @@
 <% end %>
 
 <script>
+	$('#product_category_id').chosen();
+	//$('#product_category_id').chosen().change(function(){
+	//	console.log('drop down changed');
+	//})
 	var nameFormat = /^[a-zA-Z ]*$/;
 	var numberFormat = /^\d+$/; ///^[0-9]*\d$/;
 	var desFormat = /^[a-zA-Z ]*$/;///^[ A-Za-z0-9_@./#&+-]*$/;

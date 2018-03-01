@@ -7,9 +7,13 @@ class ReviewsController < ApplicationController
 	def create 
 		@review = Review.new(review_params)
 		@review.user_id = current_user.id
-		if @review.save
-			redirect_to product_path(@review.product_id), notice: "Thanks you for adding a review."
-		end
+		@review.save
+			# if @review.save
+			# 	format.js
+			# 	# format.html{redirect_to product_path(@review.product_id), notice: "Thanks you for adding a review."}
+			# else
+			# 	format.js
+			# end
 	end
 	def edit
 		@review = Review.find(params[:id])
@@ -28,7 +32,7 @@ class ReviewsController < ApplicationController
 	def destroy
 		@review = Review.find(params[:id])
 		@review.destroy
-		redirect_to product_path(@review.product_id), notice: "You have sucessfully deleted the review."
+		#redirect_to product_path(@review.product_id), notice: "You have sucessfully deleted the review."
 	end
 
 	private

@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Code:</strong>
+  <%= @coupan.code %>
+</p>
+
+<p>
+  <strong>Discount:</strong>
+  <%= @coupan.discount %>
+</p>
+
+<p>
+  <strong>Expriry date:</strong>
+  <%= @coupan.expriry_date %>
+</p>
+
+<%= link_to 'Edit', edit_coupan_path(@coupan) %> |
+<%= link_to 'Back', coupans_path %>

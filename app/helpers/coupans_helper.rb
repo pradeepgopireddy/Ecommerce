@@ -1,0 +1,2 @@
+module CoupansHelper
+end

@@ -1,4 +1,4 @@
-<%= form_with(model: address, local: true) do |form| %>
+<%= form_with(model: address, local: true, id: 'address_form') do |form| %>
   <% if address.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(address.errors.count, "error") %> prohibited this address from being saved:</h2>
@@ -14,36 +14,43 @@
   <div class="field">
     <%= form.label :name %>
     <%= form.text_field :name, id: :address_name %>
+    <span id="nameError"></span>
   </div>
 
   <div class="field">
     <%= form.label :details %>
     <%= form.text_field :details, id: :address_details %>
+    <span id="detailsError"></span>
   </div>
 
   <div class="field">
     <%= form.label :street %>
     <%= form.text_field :street, id: :address_street %>
+    <span id="streetError"></span>
   </div>
 
   <div class="field">
     <%= form.label :landmark %>
     <%= form.text_field :landmark, id: :address_landmark %>
-  </div>
-
-  <div class="field">
-    <%= form.label :state %>
-    <%= form.text_field :state, id: :address_state %>
+    <span id="landmarkError"></span>
   </div>
 
   <div class="field">
     <%= form.label :city %>
     <%= form.text_field :city, id: :address_city %>
+    <span id="cityError"></span>
+  </div>
+
+  <div class="field">
+    <%= form.label :state %>
+    <%= form.text_field :state, id: :address_state %>
+    <span id=stateError></span>
   </div>
 
   <div class="field">
     <%= form.label :pincode %>
     <%= form.text_field :pincode, id: :address_pincode %>
+    <span id="pincodeError"></span>
   </div>
 
   <div class="actions">
@@ -51,5 +58,21 @@
   </div>
 <% end %>
 <script>
-  
+  var nameHandle = document.getElementById('address_name');
+  var detailsHandle = document.getElementById('address_details');
+  var streetHandle = document.getElementById('address_street');
+  var landmarkHandle = document.getElementById('address_landmark');
+  var cityHandle = document.getElementById('address_city');
+  var stateHandle = document.getElementById('address_state');
+  var pincodeHandle = document.getElementById('address_pincode');
+  var formHandle = document.getElementById('address_form');
+
+  var nameErrorHandle = document.getElementById('nameError');
+  var detailsErrorHandle = document.getElementById('detailsError');
+  var streetErrorHandle = document.getElementById('streetError');
+  var landmarkErrorHandle = document.getElementById('landmarkError');
+  var cityErrorHandle = document.getElementById('cityError');
+  var stateErrorHandle = document.getElementById('stateError');
+  var pincodeErrorHandle = document.getElementById('pincodeError');
+
 </script>
