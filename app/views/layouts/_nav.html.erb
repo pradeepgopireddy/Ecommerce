@@ -1,0 +1,66 @@
+<!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="/">Ecommerce</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <% if user_signed_in? %>
+            <li class="nav-item">
+              Hello,<br/>
+              <%=current_user.username %>
+            </li>
+            <% end %>
+            <li class="nav-item">
+              <!-- <a class="nav-link" href="#">About</a> -->
+              <%= link_to "Categories", categories_path, class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Products", products_path, class: "nav-link"%>
+            </li>
+            <% if user_signed_in? %>
+            <li class="nav-item">
+              <%= link_to cart_line_items_path, class: "nav-link" do %>
+                Your Cart <span class="badge badge-secondary" id="cartCount"><%= items_count %></span>
+              <% end %>
+            </li>
+            <li class="nav-item">
+              <%= link_to wishlists_path, class: "nav-link" do  %>
+                Your Wishlist <span class="badge badge-secondary" id="wishlistCount"><%= wishlist_items %></span>
+              <% end %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Your Reviews", reviews_path, class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Addresses", addresses_path, class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Account Setting", edit_user_registration_path, class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "nav-link" %>
+            </li>
+            <% else %>
+              <li class="nav-item">
+                <%= link_to "Register", new_user_registration_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Login", new_user_session_path, class: "nav-link" %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    
+    <div class="row">
+      
+    </div>

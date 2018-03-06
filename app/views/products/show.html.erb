@@ -1,133 +1,181 @@
-<h2><%= @product.name %></h2>
-<% if (user_signed_in?) && (can? :update, @product) %>
-<p>
-	<%= link_to "edit", edit_product_path(@product.id) %> |
-	<%= link_to "delete", product_path(@product.id), method: :delete, data: {confirm: "Are you sure?"} %>
-	</p>
-	<% end %>
-<p><%= @product.description %></p>
-<p> INR - <%= @product.price %></p>
-<%= @product.cod_eligible ? "cod eligible" : "cod not eligible" %>
-<%= image_tag(@product.image_url, size: "250x250") %><br/>
-<% if !@product.category.nil? %>
-	<%= link_to @product.category.name, category_path(@product.category_id) %>
-<% end %>
-<%= link_to "List products", products_path %><br/>
+      <div class="row">
 
+      	<div class="col-lg-3">
+      		<h2 class="my-4">Shop Name</h2>
+      		<% Category.all.each do |category| %>
+      		<div class="list-group">
+      			<a href="/categories/<%= category.id%>" class="list-group-item"><%= category.name %></a>
+      		</div>
+      		<% end %>
+      	</div>
+      	<!-- /.col-lg-3 -->
 
-<h3>Add to Cart</h3>
-<% if user_signed_in? %>
-	<%= form_for CartLineItem.new do |f| %>
-		<label>Quantity:</label>
-		<%= f.select :quantity, (1..5).to_a %><br/>
-		<%= f.hidden_field :product_id, value: @product.id %>
-		<%= f.submit "Add To Cart" %>
-	<% end %>
-<% else %>
-<p>You need to signin before adding products to your cart</p>
-<% end %>
+      	<div class="col-lg-9">
 
-<% if @product.reviews.empty? %>
-	<p>No reviews found. Be the first one to review.</p>
-<%else %>
-	<h3>Listing Reviews</h3>
-	<ol id="reviewList">
-		<% @product.reviews.each do |review| %>
-			<li id="review_<%= review.id %>"><%= review.body %> <%= review.rating %>
-			<% if (user_signed_in?) && (can? :update, review) %>
-		 		<%= link_to "destroy", review_path(review.id), method: :delete, data: {confirm: "Are you sure want to delete review"}, remote: true %> |<%= link_to "edit", edit_review_path(review.id)%></li>
-		 		<% end %>
-		<% end %>
-	</ol>
-<% end %>
-<% if !user_signed_in? %>
-	<p>Login to add review</p>
-<% else %>
-	<p id="reviewNotice"></p>
-	<div id="reviewError"></div>
-	<h3>Add your review</h3>
-	<%= form_for(@review, remote: true) do |f| %>
-		<label for="review_body">Body</label>
-		<%= f.text_area :body %><br/>
-		<span id="bodyError"></span>
-		<%= f.hidden_field :product_id, value: @product.id %><br/>
-		<label for="review_rating">Rating</label>
-		<%= f.radio_button :rating, 1 %> 1
-		<%= f.radio_button :rating, 2 %> 2
-		<%= f.radio_button :rating, 3 %> 3
-		<%= f.radio_button :rating, 4 %> 4
-		<%= f.radio_button :rating, 5 %> 5 <br/>
-		<span id="ratingError"></span><br/>
-		<%= f.submit "Add Review", id: 'submit' %>
-	<% end %>
-<% end %>
-<% if user_signed_in? %>
-	<%= form_for Wishlist.new do |f| %>
-		<%= f.hidden_field :product_id, value: @product.id %>
-		<%= f.submit "Move To Wishlist" %>
-	<% end %>
-<% else %>
-	<p>You need to signin before adding products to wishlist</p>
-<% end %>
+      		<div class="card mt-4">
+      		<%= image_tag(@product.image_url, size: "900x400", class: "card-img-top img-fluid") %>
+      		<div class="float-right">
+      			<% if (user_signed_in?) && (can? :update, @product) %>
+      			<%= link_to "edit", edit_product_path(@product.id), class: "btn btn-outline-info" %> <%= link_to "delete", product_path(@product.id), method: :delete, data: {confirm: "Are you sure?"}, class: "btn btn-outline-info" %>
+      			<% end %>
+      		</div>
+      			<div class="card-body">
+      				<h3 class="card-title"><%= @product.name %></h3>
+      				<h4>$<%= @product.price %></h4>
+      				<%= @product.cod_eligible ? "cod eligible" : "cod not eligible" %>
+      				<p class="card-text"><%= @product.description %></p>
+      				<span class="text-warning">&#9733; &#9733; &#9733; &#9733; &#9734;</span>
+      				<% if @product.reviews.empty? %>
+      					<p>0.0 stars</p>
+      				<% else %>
+      				<%= "%.2f" % ((@product.reviews.pluck(:rating).inject(:+))/@product.reviews.count) %> stars
+      				<% end %>
+      				<div class="row">
+      				<% if user_signed_in? %>
+      					<%= form_for(CartLineItem.new, remote: true) do |f| %>
+      					<%= f.hidden_field :product_id, value: @product.id %>
+      					<%= f.select :quantity, (1..5).to_a %>
+      					<%= f.submit "Add To Cart", class: "btn btn-primary btn-sm" %>
+      					<% end %>
+      					<%= form_for(Wishlist.new, remote: true) do |f| %>
+      					<%= f.hidden_field :product_id, value: @product.id %>
+      					<%= f.submit "Move To Wishlist", class: "btn btn-warning btn-sm float-right" %>
+      					<% end %>
+      				<% end %>
+      				</div>
+      			</div>
+      		</div>
+      		<!-- /.card -->
+      		<% if @product.reviews.empty? %>
+      			<p>No reviews found. Be the first person to add review.</p>
+      		<% else %>
+      		<div class="card card-outline-secondary my-4">
+      			<div class="card-header">
+      				Product Reviews
+      			</div>
+               <ul id="reviewList">
+      			<% @product.reviews.each do |review| %>
+      			<div class="card-body">
+      				<li id="review_<%=review.id %>"><p><%= review.body %> <%= review.rating %></p>
+      				<small class="text-muted">Posted by <%= review.user.email%> on <%= review.created_at.strftime("%B %d %Y")%></small>
+                  <% if (user_signed_in?) && (can? :update, review) %>
+                     <%= link_to "destroy", review_path(review.id), method: :delete, data: {confirm: "Are you sure want to delete review"}, remote: true %> |<%= link_to "edit", edit_review_path(review.id)%>
+                  <% end %>
+      				<hr></li>
+      			</div>
+      			<% end %>
+               </ul>
+      		</div>
+      		<% end %>
+      		<!-- /.card -->
+
+      		<!-- Reviews Form -->
+      		<% if !user_signed_in? %>
+      		<p>Login to add review</p>
+      		<% else %>
+      		<p id="reviewNotice"></p>
+      		<div id="reviewError"></div>
+
+   			<div class="card my-4">
+   				<h5 class="card-header">Add Review:</h5>
+   				<div class="card-body">
+
+   					<%= form_for(@review, remote: true) do |f| %>
+   					<div class="form-group">
+   					<label for="review_body" id="bodyGroup">Body</label>
+   					<%= f.text_area :body , class: "form-control" %><br/>
+   					<span id="bodyError"></span>
+   					</div>
+   					<%= f.hidden_field :product_id, value: @product.id %><br/>
+                  <div class="form-group" id="ratingGroup">
+   					<label for="review_rating">Rating</label>
+   					<%= f.radio_button :rating, 1 %> 1
+   					<%= f.radio_button :rating, 2 %> 2
+   					<%= f.radio_button :rating, 3 %> 3
+   					<%= f.radio_button :rating, 4 %> 4
+   					<%= f.radio_button :rating, 5 %> 5 <br/>
+   					<span id="ratingError"></span><br/>
+                  </div>
+   					<%= f.submit "Add Review", id: 'submit', class: "btn btn-primary" %>
+   					<% end %>
+   				</div>
+   			</div>
+   			<% end %>
+      	</div>
+      	<!-- /.col-lg-9 -->
+
+      </div>
 <script>
-	var bodyFormat = /^[a-zA-Z ]*$/;
+      		var bodyFormat = /^[a-zA-Z ]*$/;
 
-	var bodyHandle = document.getElementById('review_body');
-	var ratingHandle = document.getElementById('review_rating');
-	var formHandle = document.getElementById('new_review');
-	var submitHandle = document.getElementById('submit');
+      		var bodyHandle = document.getElementById('review_body');
+      		var formHandle = document.getElementById('new_review');
+      		var submitHandle = document.getElementById('submit');
 
-	var bodyErrorHandle = document.getElementById('bodyError');
-	var ratingErrorHandle = document.getElementById('ratingError');
-	var validator = {
-		bodyValid: false,
-		ratingValid: false
-	};
+      		var bodyErrorHandle = document.getElementById('bodyError');
+      		var ratingErrorHandle = document.getElementById('ratingError');
 
-	function bodyValidation(){
-		if(bodyHandle.value === ""){
-			validator.bodyValid = false;
-			bodyErrorHandle.innerHTML = "can't be blank";
-		}else if(!bodyFormat.test(bodyHandle.value)){
-			validator.bodyValid = false;
-			bodyErrorHandle.innerHTML = "should be alphabets";
-		}else if(bodyHandle.value.length < 10 ){
-			validator.bodyValid = false;
-			bodyErrorHandle.innerHTML = "review is too short";
+            var bodyGroupHandle = document.getElementById('bodyGroup');
+            var ratingGroupHandle = document.getElementById('ratingGroup');
+      		var validator = {
+      			bodyValid: false,
+      			ratingValid: false
+      		};
+
+            function formErrors(fieldGroup, fieldStatus){
+               if(fieldStatus){
+                  fieldGroup.classList.remove('formError');
+                  fieldGroup.classList.add('formSuccess');
+               }else{
+                  fieldGroup.classList.remove('formSuccess');
+                  fieldGroup.classList.add('formError');
+               }
+            }
+
+      		function bodyValidation(){
+      			if(bodyHandle.value === ""){
+      				validator.bodyValid = false;
+      				bodyErrorHandle.innerHTML = "can't be blank";
+                  formErrors(bodyGroupHandle, validator.bodyValid);
+      			}else if(!bodyFormat.test(bodyHandle.value)){
+      				validator.bodyValid = false;
+      				bodyErrorHandle.innerHTML = "should be alphabets";
+                  formErrors(bodyGroupHandle, validator.bodyValid);
+      			}else if(bodyHandle.value.length < 10 ){
+      				validator.bodyValid = false;
+      				bodyErrorHandle.innerHTML = "review is too short";
+                  formErrors(bodyGroupHandle, validator.bodyValid);
+      			}else{
+      				validator.bodyValid = true;
+      				bodyErrorHandle.innerHTML = "";
+                  formErrors(bodyGroupHandle, validator.bodyValid);
+      			}
+      		}
+
+      		function ratingValidation(){
+      			document.getElementsByName('review[rating]').forEach(function(rating){
+      				if(rating.checked){
+      					validator.ratingValid = true;
+      					return ratingErrorHandle.innerHTML = "";
+                     formErrors(ratingGroupHandle, validator.ratingValid);
+      				}
+      			})
+      			if(!validator.ratingValid){
+                  validator.ratingValid = false;
+      				ratingErrorHandle.innerHTML = "select rating";
+                  formErrors(ratingGroupHandle, validator.ratingValid);
+      			}
+	}
+	formHandle.addEventListener('submit', function(e){
+		bodyValidation();
+		ratingValidation();
+		if(Object.values(validator).includes(false)){
+			e.preventDefault();
+			setTimeout(function(){
+				submitHandle.disabled = false;
+			}, 100);
 		}else{
-			validator.bodyValid = true;
-			bodyErrorHandle.innerHTML = "";
-		}
-	}
 
-	function ratingValidation(){
-		document.getElementsByName('review[rating]').forEach(function(rating){
-			if(rating.checked){
-				validator.ratingValid = true;
-				return ratingErrorHandle.innerHTML = "";
-			}
-		})
-		if(!validator.ratingValid){
-			ratingErrorHandle.innerHTML = "can't be blank";
 		}
-		// if(ratingHandle.value === ""){
-		// 	validator.ratingValid = false;
-		// 	ratingErrorHandle.innerHTML = "can't be blank";
-		// }else if(ratingHandle.value.checked){
-		// 	validator.ratingValid = true;
-		// 	ratingErrorHandle.innerHTML = "";
-		// }
-	}
-	// formHandle.addEventListener('submit', function(e){
-	// 	bodyValidation();
-	// 	ratingValidation();
-	// 	if(Object.values(validator).includes(false)){
-	// 		e.preventDefault();
-	// 		setTimeout(function(){
-	// 			submitHandle.disabled = false;
-	// 		}, 100);
-	// 	}else{
-
-	// 	}
-	// }, false)
+	}, false)
 </script>

@@ -1,30 +1,48 @@
+<div class="col-md-4">
 <%= form_for @category do |f| %>
 
 <% if @category.errors.any? %>
-<h3>These errors prohibited the form from being saved:</h3>
-<% @category.errors.full_messages.each do |msg| %>
+<h5>These errors prohibited the form from being saved:</h5>
 <ul>
-<%= msg %>
+<% @category.errors.full_messages.each do |msg| %>
+<li><%= msg %></li>
+<% end %>
 </ul>
 <% end %>
-
-<% end %>
-<label for="category_name"> Category: </label><br/>
-<%= f.text_field :name %><br/>
-<span id="nameError"></span><br/>
-<%= f.submit %>
+<div class="form-group" id="nameGroup">
+      <label for="category_name"> Category: </label><br/>
+      <%= f.text_field :name, class: "form-control" %>
+      <span id="nameError"></span>
+</div>
+<%= f.submit "Submit", class: "btn btn-primary" %>
 <%end%>
+</div>
 
 <script>
+      var nameFormat = /^[a-zA-Z ]*$/;
 	var nameHandle = document.getElementById('category_name');
 	var nameErrorHandle = document.getElementById('nameError');
-	var nameFormat = /^[a-zA-Z ]*$/;
-	
+	var nameValid = false;
+      var nameGroupHandle = document.getElementById('nameGroup');
+
+	function formErrors(fieldGroup, fieldStatus){
+            if(fieldStatus){
+                  fieldGroup.classList.remove('formError');
+                  fieldGroup.classList.add('formSuccess');
+            }else{
+                  fieldGroup.classList.remove('formSuccess');
+                  fieldGroup.classList.add('formError');
+            }
+      }
 	nameHandle.addEventListener('blur', function(){
 		if(nameHandle.value === ""){
+                  nameValid = false;
 			nameErrorHandle.innerHTML = "can't be blank";
+                  formErrors(nameGroupHandle, nameValid);
 		}else if(!nameFormat.test(nameHandle.value)){
+                  nameValid = false;
       		nameErrorHandle.innerHTML = "should only be alphabets";
+                  formErrors(nameGroupHandle, nameValid);
       	}else{
       		xhr = new XMLHttpRequest();
       		xhr.open('GET', `/categories/check_name_present?name=${nameHandle.value}`, true);
@@ -32,9 +50,13 @@
       			if(xhr.readyState === 4 && xhr.status === 200){
       				var response = JSON.parse(xhr.responseText);
       				if(response.msg){
+                                    nameValid = true;
       					nameErrorHandle.innerHTML = 'can be used';
+                                    formErrors(nameGroupHandle, nameValid);
       				}else{
+                                    nameValid = false;
       					nameErrorHandle.innerHTML = 'already taken';
+                                    formErrors(nameGroupHandle, nameValid);
       				}
       			}
       		}

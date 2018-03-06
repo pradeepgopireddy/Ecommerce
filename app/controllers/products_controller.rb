@@ -7,7 +7,8 @@ class ProductsController < ApplicationController
 	#http method - GET
 	#roles& responsibility - to list all products
 	def index
-		@products = Product.all
+		@products = Product.all 
+		@category = Category.new
 	end
 	#url - http://localhost:3000/products/new
 	#uri - /products/new

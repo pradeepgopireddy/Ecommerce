@@ -1,3 +1,4 @@
+<div class="col-md-4">
 <%= form_with(model: address, local: true, id: 'address_form') do |form| %>
   <% if address.errors.any? %>
     <div id="error_explanation">
@@ -11,53 +12,58 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="form-group" id="nameGroup">
     <%= form.label :name %>
-    <%= form.text_field :name, id: :address_name %>
+    <%= form.text_field :name, id: :address_name, class: "form-control"%>
     <span id="nameError"></span>
   </div>
 
-  <div class="field">
+  <div class="form-group" id="detailsGroup">
     <%= form.label :details %>
-    <%= form.text_field :details, id: :address_details %>
+    <%= form.text_field :details, id: :address_details, class: "form-control" %>
     <span id="detailsError"></span>
   </div>
 
-  <div class="field">
+  <div class="form-group" id="streetGroup">
     <%= form.label :street %>
-    <%= form.text_field :street, id: :address_street %>
+    <%= form.text_field :street, id: :address_street, class: "form-control" %>
     <span id="streetError"></span>
   </div>
 
-  <div class="field">
+  <div class="form-group" id="landmarkGroup">
     <%= form.label :landmark %>
-    <%= form.text_field :landmark, id: :address_landmark %>
+    <%= form.text_field :landmark, id: :address_landmark, class: "form-control" %>
     <span id="landmarkError"></span>
   </div>
 
-  <div class="field">
+  <div class="form-group" id="cityGroup">
     <%= form.label :city %>
-    <%= form.text_field :city, id: :address_city %>
+    <%= form.text_field :city, id: :address_city, class: "form-control" %>
     <span id="cityError"></span>
   </div>
 
-  <div class="field">
+  <div class="form-group" id="stateGroup">
     <%= form.label :state %>
-    <%= form.text_field :state, id: :address_state %>
+    <%= form.text_field :state, id: :address_state, class: "form-control" %>
     <span id=stateError></span>
   </div>
 
-  <div class="field">
+  <div class="form-group" id="pincodeGroup">
     <%= form.label :pincode %>
-    <%= form.text_field :pincode, id: :address_pincode %>
+    <%= form.text_field :pincode, id: :address_pincode, class: "form-control" %>
     <span id="pincodeError"></span>
   </div>
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit "Submit", id: "submit", class: "btn btn-primary" %>
   </div>
 <% end %>
+</div>
 <script>
+  var nameFormat = /^[a-zA-Z ]*$/;
+  var addressFormat = /^[ A-Za-z0-9_@./#&+-]*$/;
+  var pincodeFormat = /^\d+$/;
+
   var nameHandle = document.getElementById('address_name');
   var detailsHandle = document.getElementById('address_details');
   var streetHandle = document.getElementById('address_street');
@@ -66,6 +72,7 @@
   var stateHandle = document.getElementById('address_state');
   var pincodeHandle = document.getElementById('address_pincode');
   var formHandle = document.getElementById('address_form');
+  var submitHandle =document.getElementById('submit');
 
   var nameErrorHandle = document.getElementById('nameError');
   var detailsErrorHandle = document.getElementById('detailsError');
@@ -74,5 +81,158 @@
   var cityErrorHandle = document.getElementById('cityError');
   var stateErrorHandle = document.getElementById('stateError');
   var pincodeErrorHandle = document.getElementById('pincodeError');
+
+  var nameGroupHandle = document.getElementById('nameGroup');
+  var detailsGroupHandle = document.getElementById('detailsGroup');
+  var streetGroupHandle = document.getElementById('streetGroup');
+  var landmarkGroupHandle = document.getElementById('landmarkGroup');
+  var cityGroupHandle = document.getElementById('cityGroup');
+  var stateGroupHandle = document.getElementById('stateGroup');
+  var pincodeGroupHandle = document.getElementById('pincodeGroup');
+
+  function formErrors(fieldGroup, fieldStatus){
+    if(fieldStatus){
+      fieldGroup.classList.remove('formError');
+      fieldGroup.classList.add('formSuccess');
+    }else{
+      fieldGroup.classList.remove('formSuccess');
+      fieldGroup.classList.add('formError');
+    }
+  }
+  var validator = {
+    nameValid: false,
+    detailsValid: false,
+    streetValid: false,
+    landmarkValid: false,
+    cityValid: false, 
+    stateValid: false,
+    pincodeValid: false
+  };
+  function nameValidation(){
+    if(nameHandle.value === ""){
+      validator.nameValid = false;
+      nameErrorHandle.innerHTML = "can't be blank";
+      formErrors(nameGroupHandle, validator.nameValid);
+    }else if(!nameFormat.test(nameHandle.value)){
+      validator.nameValid = false;
+      nameErrorHandle.innerHTML = "should be alphabets only";
+      formErrors(nameGroupHandle, validator.nameValid);
+    }else{
+      validator.nameValid = true;
+      nameErrorHandle.innerHTML = "";
+      formErrors(nameGroupHandle, validator.nameValid);
+    }
+  }
+  function detailsValidation(){
+    if(detailsHandle.value === ""){
+      validator.detailsValid = false;
+      detailsErrorHandle.innerHTML = "can't be blank";
+      formErrors(detailsGroupHandle, validator.detailsValid);
+    }else if(!addressFormat.test(detailsHandle.value)){
+      validator.detailsValid = false;
+      detailsErrorHandle.innerHTML = "write correct address format";
+      formErrors(detailsGroupHandle, validator.detailsValid);
+    }else{
+      validator.detailsValid = true;
+      detailsErrorHandle.innerHTML = "";
+      formErrors(detailsGroupHandle, validator.detailsValid);
+    }
+  }
+  function streetValidation(){
+    if(streetHandle.value === ""){
+      validator.streetValid = false;
+      streetErrorHandle.innerHTML = "can't be blank";
+      formErrors(streetGroupHandle, validator.streetValid);
+    }else if(!nameFormat.test(streetHandle.value)){
+      validator.streetValid = false;
+      streetErrorHandle.innerHTML = "should be alphabets only";
+      formErrors(streetGroupHandle, validator.streetValid);
+    }else{
+      validator.streetValid = true;
+      streetErrorHandle.innerHTML = "";
+      formErrors(streetGroupHandle, validator.nameValid);
+    }
+  }
+  function landmarkValidation(){
+    if(landmarkHandle.value === ""){
+      validator.landmarkValid = false;
+      landmarkErrorHandle.innerHTML = "can't be blank";
+      formErrors(landmarkGroupHandle, validator.landmarkValid);
+    }else if(!nameFormat.test(landmarkHandle.value)){
+      validator.landmarkValid = false;
+      landmarkErrorHandle.innerHTML = "should be alphabets only";
+      formErrors(landmarkGroupHandle, validator.landmarkValid);
+    }else{
+      validator.landmarkValid = true;
+      landmarkErrorHandle.innerHTML = "";
+      formErrors(landmarkGroupHandle, validator.landmarkValid);
+    }
+  }
+  function cityValidation(){
+    if(cityHandle.value === ""){
+      validator.cityValid = false;
+      cityErrorHandle.innerHTML = "can't be blank";
+      formErrors(cityGroupHandle, validator.cityValid);
+    }else if(!nameFormat.test(cityHandle.value)){
+      validator.cityValid = false;
+      cityErrorHandle.innerHTML = "should be alphabets only";
+      formErrors(cityGroupHandle, validator.cityValid);
+    }else{
+      validator.cityValid = true;
+      cityErrorHandle.innerHTML = "";
+      formErrors(cityGroupHandle, validator.cityValid);
+    }
+  }
+  function stateValidation(){
+    if(stateHandle.value === ""){
+      validator.stateValid = false;
+      stateErrorHandle.innerHTML = "can't be blank";
+      formErrors(stateGroupHandle, validator.stateValid);
+    }else if(!nameFormat.test(stateHandle.value)){
+      validator.stateValid = false;
+      stateErrorHandle.innerHTML = "should be alphabets only";
+      formErrors(stateGroupHandle, validator.stateValid);
+    }else{
+      validator.stateValid = true;
+      stateErrorHandle.innerHTML = "";
+      formErrors(stateGroupHandle, validator.stateValid);
+    }
+  }
+  function pincodeValidation(){
+    if(pincodeHandle.value === ""){
+      validator.pincodeValid = false;
+      pincodeErrorHandle.innerHTML = "can't be blank";
+      formErrors(pincodeGroupHandle, validator.pincodeValid);
+    }else if(!pincodeFormat.test(pincodeHandle.value)){
+      validator.pincodeValid = false;
+      pincodeErrorHandle.innerHTML = "should be numbers only";
+      formErrors(pincodeGroupHandle, validator.pincodeValid);
+    }else if(pincodeHandle.value.length !== 5){
+      validator.pincodeValid = false;
+      pincodeErrorHandle.innerHTML = "pincode must be 5 digits only";
+      formErrors(pincodeGroupHandle, validator.pincodeValid);
+    }else{
+      validator.pincodeValid = true;
+      pincodeErrorHandle.innerHTML = "";
+      formErrors(pincodeGroupHandle, validator.pincodeValid);
+    }
+  }
+  formHandle.addEventListener('submit', function(e){
+    nameValidation();
+    detailsValidation();
+    streetValidation();
+    landmarkValidation();
+    cityValidation();
+    stateValidation();
+    pincodevalidation();
+    if(Object.values(validator).includes(false)){
+      e.preventDefault();
+      setTimeout(function(){
+        submitHandle.disabled = false;
+      }, 100);
+    }else{
+
+    }
+  }, false)
 
 </script>

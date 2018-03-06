@@ -1,0 +1,40 @@
+<div class="row">
+			<% @category.products.each do |product| %>
+			<div class="col-lg-4 col-md-6 mb-4">
+				<div class="card h-100">
+					<%= image_tag(product.image_url, size: "700x400", class: "card-img-top") %>
+					<div class="card-body">
+						<h4 class="card-title">
+							<%= link_to product.name, product %>
+						</h4>
+						<h5><%= product.price %></h5>
+						<p class="card-text"><%= product.description %></p>
+						
+						<% if user_signed_in? %>
+						<div class="row">
+							<%= form_for(CartLineItem.new, remote: true) do |f| %>
+							<%= f.hidden_field :quantity, value: 1 %>
+							<%= f.hidden_field :product_id, value: product.id %>
+							<%= f.submit "Add to Cart", class: "btn btn-primary btn-sm"%>
+							<% end %>
+							<%= form_for Wishlist.new do |f| %>
+							<%= f.hidden_field :product_id, value: product.id %>
+							<%= f.submit "Add to Wishlist", class: "btn btn-warning btn-sm float-right" %>
+							<% end %>
+						</div>	
+						<% end %>
+						
+					</div>
+					<div class="card-footer">
+						<small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+						<% if product.reviews.empty? %>
+							<p>0.0 stars</p>
+						<% else %>
+							<%= "%.2f" % (product.reviews.pluck(:rating).inject(:+)/ product.reviews.count) %> stars
+						<% end %>
+					</div>
+				</div>
+			</div>
+			<% end %>
+		</div>
+		<!-- /.row -->

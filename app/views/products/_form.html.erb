@@ -1,40 +1,51 @@
-<%= form_for @product do |f| %>
-<% if @product.errors.any? %>
-<h3>These errors prohibited the form from being saved:</h3>
-<ul>
-	<%@product.errors.full_messages.each do |msg| %>
-	<%= msg %>
+<div class="row">
+	<div class="col-md-4">
+	<%= form_for @product do |f| %>
+	<% if @product.errors.any? %>
+	<h3>These errors prohibited the form from being saved:</h3>
+	<ul>
+		<%@product.errors.full_messages.each do |msg| %>
+		<%= msg %>
+		<% end %>
 	<% end %>
-<% end %>
-</ul>
+	</ul>
+	<div class="form-group" id="categoryGroup">
+		<label for="product_category_id"> Category: </label>
+		<%= f.collection_select :category_id, Category.all, :id, :name, prompt: "-->Selcet Category<--", class: "form-control" %>
+		<span id="categoryError"></span>
+	</div>
+	<div class="form-group" id="nameGroup">
+		<label for="product_name"> Name: </label>
+		<%= f.text_field :name, placeholder: "Enter name", class: "form-control"%>
+		<span id="nameError"></span>
+	</div>
+	<div class="form-group" id="descriptionGroup">
+		<label for="product_description"> Description: </label>
+		<%= f.text_area :description, class: "form-control" %>
+		<span id="descriptionError"></span>
+	</div>
 
-<label for="product_category_id"> Category: </label>
-<%= f.collection_select :category_id, Category.all, :id, :name, prompt: "-->Selcet Category<--" %><br/>
-<span id="categoryError"></span><br/>
+	<div class="form-group" id="imageGroup">
+		<label for="product_image_url">Image URL</label>
+		<%= f.text_field :image_url, class: "form-control" %>
+		<span id="imageError"></span>
+	</div>
 
-<label for="product_name"> Name: </label>
-<%= f.text_field :name, placeholder: "Enter name" %><br/>
-<span id="nameError"></span><br/>
-
-<label for="product_description"> Description: </label>
-<%= f.text_area :description %><br/>
-<span id="descriptionError"></span><br/>
-
-<label for="product_image_url">Image URL</label>
-<%= f.text_field :image_url %><br/>
-<span id="imageError"></span><br/>
-
-<label for="product_price"> Price: </label>
-<%= f.number_field :price, min: 1 %><br/>
-<span id="priceError"></span><br/>
-<%= f.check_box :cod_eligible %> <label for="product_cod_eligible">COD Eligible</label>
-
-<label for="product_stock"> Stock: </label>
-<%= f.number_field :stock, min: 0 %><br/>
-<span id="stockError"></span><br/>
-
-<%= f.submit "Submit", id: 'submit' %>
-<% end %>
+	<div class="form-group" id="priceGroup">
+		<label for="product_price"> Price: </label>
+		<%= f.number_field :price, min: 1, class: "form-control"%>
+		<span id="priceError"></span>
+	</div>
+	<%= f.check_box :cod_eligible %> <label for="product_cod_eligible">COD Eligible</label>
+	<div class="form-group" id="stockGroup">
+		<label for="product_stock"> Stock: </label>
+		<%= f.number_field :stock, min: 0, class: "form-control" %>
+		<span id="stockError"></span>
+	</div>
+	<%= f.submit "Submit", id: 'submit', class: "btn btn-primary" %>
+	<% end %>
+	</div>
+</div>
 
 <script>
 	$('#product_category_id').chosen();
@@ -62,6 +73,13 @@
 	var priceErrorHandle = document.getElementById('priceError');
 	var stockErrorHandle = document.getElementById('stockError');
 
+	var categoryGroupHandle = document.getElementById('categoryGroup');
+	var nameGroupHandle = document.getElementById('nameGroup');
+	var descriptionGroupHandle = document.getElementById('descriptionGroup');
+	var imageGroupHandle = document.getElementById('imageGroup');
+	var priceGroupHandle = document.getElementById('priceGroup');
+	var stockGroupHandle = document.getElementById('stockGroup');
+
 	priceHandle.addEventListener('blur', function(){
 		if(parseInt(priceHandle.value) < 10000){
 			codHandle.checked = true;
@@ -73,6 +91,7 @@
 		priceHandle.innerHTML = "";
 		codHandle.checked = false;
 	}, false)
+
 	var validator = {
 		categoryValid: false,
 		nameValid: false,
@@ -81,14 +100,25 @@
 		priceValid: false,
 		stockValid: false,
 	};
+	function formErrors(fieldGroup, fieldStatus){
+		if(fieldStatus){
+			fieldGroup.classList.remove('formError');
+			fieldGroup.classList.add('formSuccess');
+		}else{
+			fieldGroup.classList.remove('formSuccess');
+			fieldGroup.classList.add('formError');
+		}
+	}
 
 	function categoryValidation(){
 		if(categoryHandle.value === ""){
 			validator.categoryValid = false;
 			categoryErrorHandle.innerHTML = "can't be blank";
+			formErrors(categoryGroupHandle, validator.categoryValid);
 		}else{
 			validator.categoryValid = true;
 			categoryErrorHandle.innerHTML = "";
+			formErrors(categoryGroupHandle, validator.categoryValid);
 		}
 	}
 
@@ -96,12 +126,15 @@
 	    if(nameHandle.value === ""){
 	      validator.nameValid = false;
 	      nameErrorHandle.innerHTML = "can't be blank";
+	      formErrors(nameGroupHandle, validator.nameValid);
 	    }else if(!nameFormat.test(nameHandle.value)){
 	      validator.nameValid = false;
-	      nameErrorHandle.innerHTML = "should only be alphabets"
+	      nameErrorHandle.innerHTML = "should only be alphabets";
+	      formErrors(nameGroupHandle, validator.nameValid);
 	    }else{
 	      validator.nameValid = true;
 	      nameErrorHandle.innerHTML = "";
+	      formErrors(nameGroupHandle, validator.nameValid);
 	    }
 	}
 
@@ -109,15 +142,19 @@
 		if(descriptionHandle.value === ""){
 			validator.descriptionValid = false;
 			descriptionErrorHandle.innerHTML = "can't be blank";
+			formErrors(descriptionGroupHandle, validator.descriptionValid);
 		}else if(!desFormat.test(descriptionHandle.value)){
 			validator.descriptionValid = false;
 			descriptionErrorHandle.innerHTML = "should only be alphabets";
+			formErrors(descriptionGroupHandle, validator.descriptionValid);
 		}else if(descriptionHandle.value.length < 5){
 			validator.descriptionValid = false;
 			descriptionErrorHandle.innerHTML = "your description is too small";
+			formErrors(descriptionGroupHandle, validator.descriptionValid);
 		}else{
 			validator.descriptionValid = false;
 			descriptionErrorHandle.innerHTML = "";
+			formErrors(descriptionGroupHandle, validator.descriptionValid);
 		}
 	}
 
@@ -125,9 +162,11 @@
 		if(imageHandle.value === ""){
 			validator.imageValid = false;
 			imageErrorHandle.innerHTML = "can't be blank";
+			formErrors(imageGroupHandle, validator.imageValid);
 		}else{
 			validator.imageValid = true;
 			imageErrorHandle.innerHTML = "";
+			formErrors(imageGroupHandle, validator.imageValid);
 		}
 	}
 
@@ -135,15 +174,19 @@
 		if(priceHandle.value === ""){
 			validator.priceValid = false;
 			priceErrorHandle.innerHTML = "can't be blank";
+			formErrors(priceGroupHandle, validator.priceHandle);
 		}else if(parseInt(priceHandle.value) === NaN){
 			validator.priceValid = false;
 			priceErrorHandle.innerHTML = "should be number";
+			formErrors(priceGroupHandle, validator.priceHandle);
 		}else if(parseInt(priceHandle.value) < 1){
 			validator.priceValid = false;
 			priceErrorHandle.innerHTML = "should be greater than zero";
+			formErrors(priceGroupHandle, validator.priceHandle);
 		}else{
 			validator.priceValid = true;
 			priceErrorHandle.innerHTML = "";
+			formErrors(priceGroupHandle, validator.priceHandle);
 		}
 	}
 
@@ -151,15 +194,19 @@
 		if(stockHandle.value === ""){
 			validator.stockValid = false;
 			stockErrorHandle.innerHTML = "can't be blank";
+			formErrors(stockGroupHandle, validator.stockValid);
 		}else if(parseInt(stockHandle.value) === NaN){
 			validator.stockValid = false;
 			stockErrorHandle.innerHTML = "should be number";
+			formErrors(stockGroupHandle, validator.stockValid);
 		}else if(parseInt(stockHandle.value) < 0){
 			validator.stockValid = false;
 			stockErrorHandle.innerHTML = "should be greater than or equals to zero";
+			formErrors(stockGroupHandle, validator.stockValid);
 		}else{
 			validator.stockValid = true;
 			stockErrorHandle.innerHTML = "";
+			formErrors(stockGroupHandle, validator.stockValid);
 		}
 	}
 	formHandle.addEventListener('submit', function(e){

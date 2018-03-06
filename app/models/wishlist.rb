@@ -7,11 +7,15 @@ class Wishlist < ApplicationRecord
 		if list_item.nil?
 			self.save 
 		else
-			redirect_to wishlists_path, notice: "The product already exist in wishlist"
+			 #redirect_to wishlists_path, notice: "The product already exist in wishlist"
 		end
 	end
 	def remove_from_cart
 		remove_item = CartLineItem.find_by(user_id: self.user_id, product_id: self.product_id)
-		remove_item.destroy
+		if remove_item.nil?
+		else
+			remove_item.destroy
+		end
+		
 	end
 end

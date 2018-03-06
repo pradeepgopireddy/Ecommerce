@@ -2,7 +2,7 @@
 <% if @wishlists.empty? %>
 	<p>Your wishlist is empty. Shop<%= link_to "here", products_path %></p>
 <% else %>
-	<table border = "1">
+	<table class="table table-hover">
 		<thead>
 			<tr>
 				<th>  # </th>
@@ -20,11 +20,11 @@
 				<td><%= image_tag(wishlist_item.product.image_url, size: "150x125") %></td>
 				<td><%= wishlist_item.product.name %></td>
 				<td><%= wishlist_item.product.price %></td>
-				<td><%= link_to "remove", wishlist_path(wishlist_item.id), method: :delete, data: {confirm: "Are you sure want to remove item?"} %></td>
-				<td><%= form_for CartLineItem.new do |f| %>
+				<td><%= link_to "remove", wishlist_path(wishlist_item.id), method: :delete, data: {confirm: "Are you sure want to remove item?"}, class: "btn btn-outline-info" %></td>
+				<td><%= form_for(CartLineItem.new, remote: true) do |f| %>
 					<%= f.hidden_field :product_id, value: wishlist_item.product_id %>
 					<%= f.hidden_field :quantity, value: 1 %>
-					<%= f.submit "Add To Cart" %>
+					<%= f.submit "Add To Cart", class: "btn btn-primary" %>
 					<% end %>
 				</td>
 			</tr>

@@ -6,9 +6,12 @@ class WishlistsController < ApplicationController
 	def create
 		@wishlist = Wishlist.new(wishlist_params)
 		@wishlist.user_id = current_user.id
-		@wishlist.save_or_update
 		@wishlist.remove_from_cart 
-		redirect_to wishlists_path, notice: "The product successfully moved to wishlist"
+		@wishlist.save_or_update
+		respond_to do |format|
+			format.js
+			format.html{redirect_to wishlists_path, notice: "The product successfully moved to wishlist"}
+		end
 	end
 	def destroy
 		@wishlist = Wishlist.find(params[:id])
