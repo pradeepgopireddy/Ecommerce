@@ -1,4 +1,5 @@
 class CategoriesController < ApplicationController
+	
 	before_action :authenticate_user!, except: [:index, :show]
 	load_and_authorize_resource #invokes ability class
 	#url - http://localhost:3000/categories
@@ -56,6 +57,6 @@ class CategoriesController < ApplicationController
   end
   private
   def category_params
-  	params[:category].permit(:name)
+  	params[:category].permit(:name, :parent_id)
   end
 end

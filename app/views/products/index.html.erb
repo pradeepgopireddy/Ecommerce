@@ -5,7 +5,16 @@
 		<h2 class="my-4">Categories</h2>
 		<% Category.all.each do |category| %>
 		<div class="list-group">
-			<%= link_to category.name, category, class: "list-group-item", remote: true %>
+			<% if !category.parent_id.present? %>
+				<div class="list-group-item" id="category">
+				<%= link_to category.name, category %>
+				</div>
+				<div class="list-group-item" id ="sub_category">
+					<% category.children.each do |child| %>
+						<%= link_to child.name, child, remote: true %><br>
+					<% end %>
+				</div>
+			<% end %>
 		</div>
 		<% end %>
 		<!-- Button trigger modal -->

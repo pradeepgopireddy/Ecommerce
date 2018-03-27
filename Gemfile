@@ -11,6 +11,8 @@ gem 'rails', '~> 5.1.4'
 gem 'devise'
 gem 'cancancan'
 gem 'pry'
+gem 'ratyrate'
+gem 'acts_as_tree'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 # Use Puma as the app server

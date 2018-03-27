@@ -1,4 +1,5 @@
 class CartLineItemsController < ApplicationController
+	
 	def index
 		#CartLineItem.where('user_id = ?', current_user.id)
 		@cart_line_items = current_user.cart_line_items #to find only the cart line items for that currently logged in user

@@ -11,9 +11,10 @@
 	</ul>
 	<div class="form-group" id="categoryGroup">
 		<label for="product_category_id"> Category: </label>
-		<%= f.collection_select :category_id, Category.all, :id, :name, prompt: "-->Selcet Category<--", class: "form-control" %>
+		<%= f.collection_select :category_id, Category.roots, :id, :name, prompt: "-->Selcet Category<--", class: "form-control" %>
 		<span id="categoryError"></span>
 	</div>
+	
 	<div class="form-group" id="nameGroup">
 		<label for="product_name"> Name: </label>
 		<%= f.text_field :name, placeholder: "Enter name", class: "form-control"%>

@@ -14,10 +14,12 @@
       <%= f.text_field :name, class: "form-control" %>
       <span id="nameError"></span>
 </div>
+<label for="category_parent_id">Select Categories:</label>
+<%= f.collection_select :parent_id, Category.roots, :id, :name, prompt: "select category", include_blank: true %>
 <%= f.submit "Submit", class: "btn btn-primary" %>
+
 <%end%>
 </div>
-
 <script>
       var nameFormat = /^[a-zA-Z ]*$/;
 	var nameHandle = document.getElementById('category_name');

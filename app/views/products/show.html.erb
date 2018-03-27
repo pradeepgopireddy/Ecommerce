@@ -4,8 +4,11 @@
       		<h2 class="my-4">Shop Name</h2>
       		<% Category.all.each do |category| %>
       		<div class="list-group">
+            <% if !category.parent_id.present? %>
       			<a href="/categories/<%= category.id%>" class="list-group-item"><%= category.name %></a>
+               <% end %>
       		</div>
+
       		<% end %>
       	</div>
       	<!-- /.col-lg-3 -->
